@@ -1,14 +1,16 @@
 flowchart TD
-  Start[Landing Page]
-  SignUpPage[Sign Up Page]
-  SignInPage[Sign In Page]
-  AuthAPI[Authentication API Endpoint]
-  DashboardPage[Dashboard Page]
-  Start -->|Select Sign Up| SignUpPage
-  Start -->|Select Sign In| SignInPage
-  SignUpPage -->|Submit Credentials| AuthAPI
-  SignInPage -->|Submit Credentials| AuthAPI
-  AuthAPI -->|Success| DashboardPage
-  AuthAPI -->|Error| SignUpPage
-  AuthAPI -->|Error| SignInPage
-  DashboardPage -->|Click Logout| Start
+    Start[Start] --> SignIn[Sign In Page]
+    Start --> SignUp[Sign Up Page]
+    SignIn --> AuthAPI[Auth API Route]
+    SignUp --> AuthAPI
+    AuthAPI --> AuthCheck{Auth Success}
+    AuthCheck -->|Yes| Dashboard[Dashboard Page]
+    AuthCheck -->|No| SignIn
+    Dashboard --> FetchData[Fetch Usage Data]
+    FetchData --> DB[Drizzle ORM PostgreSQL]
+    DB --> FetchData
+    FetchData --> Render[Render Dashboard Components]
+    Render --> Cards[Section Cards]
+    Render --> Table[Data Table]
+    Render --> Chart[Interactive Chart]
+    Render --> End[End]
