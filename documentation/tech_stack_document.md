@@ -1,90 +1,128 @@
-# Tech Stack Document
+# Tech Stack Document for login-usage-dashboard
 
-This document explains the key technologies chosen for the **codeguide-starter** project. It’s written in everyday language so anyone—technical or not—can understand why each tool was picked and how it supports the application.
+This document explains the technology choices behind the **login-usage-dashboard** starter template in simple terms. It’s designed so anyone—technical or not—can understand why each tool was chosen and how they work together to deliver a user login flow and a personalized usage dashboard.
 
 ## 1. Frontend Technologies
-The frontend is everything the user sees and interacts with. For this project, we’ve used:
 
-- **Next.js (App Router)**
-  - A React framework that makes page routing, server-side rendering, and API routes very simple.
-  - Enhances user experience by pre-rendering pages on the server or at build time, leading to faster initial load.
-- **React 18**
-  - The underlying library for building user interfaces with reusable components.
-  - Provides a smooth, interactive experience thanks to its virtual DOM and modern hooks.
+Our front end brings together modern frameworks and styling tools to create a fast, responsive, and attractive user interface.
+
+- **Next.js 15 (App Router with Turbopack)**
+  - Provides page routing, server-side rendering (SSR), and API routes out of the box.
+  - Improves performance by rendering pages on the server before sending them to the browser.
+  - Turbopack helps with faster builds and hot module replacement during development.
+
 - **TypeScript**
-  - A superset of JavaScript that adds types (labels for data).
-  - Helps catch errors early during development and makes the code easier to maintain.
-- **CSS (globals.css & theme.css)**
-  - **globals.css** applies base styles (fonts, colors, resets) across the entire app.
-  - **dashboard/theme.css** defines the look and feel specific to the dashboard area.
-  - This separation keeps styles organized and avoids accidental style conflicts.
+  - Adds type checking to JavaScript, catching errors early.
+  - Ensures that data you fetch from the database matches what your UI components expect.
 
-By combining these tools, we have a clear structure (Next.js folders for pages and layouts), safer code (TypeScript), and flexible styling with vanilla CSS.
+- **shadcn/ui**
+  - A ready-made collection of customizable UI components (cards, tables, charts).
+  - Ensures a consistent look and feel, while letting you tweak styles to your brand.
+
+- **Tailwind CSS v4**
+  - A utility-first CSS framework that lets you style elements directly in your code.
+  - Speeds up design work and keeps styles consistent across the app.
+
+- **React State Management**
+  - Uses React’s built-in `useState` and `useContext` hooks.
+  - Keeps the dashboard simple and performant, without extra complexity.
 
 ## 2. Backend Technologies
-The backend handles data, user accounts, and the logic behind the scenes. Our choices here are:
 
-- **Next.js API Routes**
-  - Allows us to write server-side code (`route.ts` files) alongside our frontend in the same project.
-  - Runs on Node.js, so we can handle requests like sign-up, sign-in, and data fetching in one place.
-- **Node.js Runtime**
-  - The JavaScript environment on the server that executes our API routes.
-- **bcrypt** (npm package)
-  - A library for hashing passwords securely before storing them.
-  - Ensures that even if someone got access to our data, raw passwords aren’t visible.
-- **(Optional) NextAuth.js or JWT**
-  - While this starter kit shows a custom authentication flow, it can easily integrate services like NextAuth.js for email-based login or JWT (JSON Web Tokens) for stateless sessions.
+The backend handles user authentication, data storage, and serving data to the front end securely.
 
-These components work together to receive user credentials, verify or store them securely, manage sessions or tokens, and deliver protected data back to the frontend.
+- **Next.js API Routes & Server Components**
+  - Let us run code on the server (e.g., fetching user data) without exposing secrets to the browser.
+  - Simplify the process of building secure endpoints for authentication and data fetching.
+
+- **Better Auth**
+  - A modern library that manages sign-up, sign-in, password storage, and session handling.
+  - Works seamlessly with Drizzle ORM to store user credentials safely in the database.
+
+- **PostgreSQL Database**
+  - A reliable, enterprise-grade relational database for storing users and usage details.
+  - Well-suited to queries and relationships (e.g., each user’s usage records).
+
+- **Drizzle ORM**
+  - A lightweight, type-safe tool for writing database queries in TypeScript.
+  - Ensures compile-time checks so you can’t request or save fields that don’t exist.
 
 ## 3. Infrastructure and Deployment
-Infrastructure covers where and how we host the app, as well as how changes get delivered:
 
-- **Git & GitHub**
-  - Version control system (Git) and remote hosting (GitHub) keep track of all code changes and allow team collaboration.
-- **Vercel (or Netlify)**
-  - A popular hosting service optimized for Next.js, with one-click deployments and global content delivery.
-  - Automatically rebuilds and deploys the site whenever code is pushed to the main branch.
-- **GitHub Actions (CI/CD)**
-  - Automates tasks like linting (ESLint), formatting (Prettier), and running any tests you add.
-  - Ensures that only clean, tested code goes live.
+We chose tools and workflows that make development smooth and deployments reliable.
 
-Together, these tools provide a reliable, scalable setup where every code change is tested and deployed quickly, with minimal manual work.
+- **Version Control (Git & GitHub)**
+  - Tracks every change you make, lets multiple developers collaborate safely.
+
+- **Docker**
+  - Packages the app and its environment into a container so it runs the same everywhere.
+  - Simplifies setup for new developers and ensures consistency between development and production.
+
+- **Vercel**
+  - A hosting platform built by the creators of Next.js.
+  - Automatically builds and deploys your front end on every code push.
+  - Provides built-in SSL, global edge caching, and analytics.
+
+- **CI/CD Pipeline (GitHub Actions)**
+  - (Recommended) Automates testing and deployment when you push updates.
+  - Ensures new code doesn’t break existing features and is deployed without manual steps.
 
 ## 4. Third-Party Integrations
-While this starter kit is minimal by design, it already includes or can easily add:
 
-- **bcrypt**
-  - For secure password hashing (included as an npm dependency).
-- **NextAuth.js** (optional)
-  - A full-featured authentication library supporting email/password, OAuth, and more.
-- **Sentry or LogRocket** (optional)
-  - For real-time error tracking and performance monitoring in production.
+These external services and libraries extend the app’s functionality without building everything from scratch.
 
-These integrations help extend the app’s capabilities without building every feature from scratch.
+- **Better Auth** (Authentication Library)
+  - Manages user login, password resets, and sessions.
+  - Saves you from writing and securing authentication code yourself.
+
+- **Vercel** (Hosting & Edge Network)
+  - Hosts your front end and API routes with a simple workflow.
+  - Automatically scales to handle traffic spikes.
+
+- **Drizzle ORM**
+  - While not an external service, it’s a third-party library that provides type-safe database access.
 
 ## 5. Security and Performance Considerations
-We’ve baked in several measures to keep users safe and the app running smoothly:
 
-Security:
-- Passwords are never stored in plain text—bcrypt hashes them with a random salt.
-- API routes can implement CSRF protection and input validation to block malicious requests.
-- Session tokens or cookies are marked secure and HttpOnly to prevent theft via JavaScript.
+We’ve baked in best practices to protect user data and deliver a snappy experience.
 
-Performance:
-- Server-side rendering (SSR) and static site generation (SSG) in Next.js deliver pages faster.
-- Code splitting and lazy-loaded components ensure users only download what they need.
-- Global CSS and theme files are small and cached by the browser for quick repeat visits.
+- **Secure Authentication**
+  - Passwords are hashed before storage.
+  - Sessions are stored safely in the database and checked on every request.
 
-These strategies work together to give users a fast, secure experience every time.
+- **Server-Side Rendering & Server Components**
+  - Sensitive logic (like database queries) runs on the server, not in the browser.
+  - User data is fetched securely before the page is sent to the client.
+
+- **Environment Variables**
+  - Secrets (database URL, API keys) are never hard-coded—kept in environment settings only.
+
+- **Performance Optimizations**
+  - Turbopack for faster rebuilds during development.
+  - Automatic code splitting in Next.js to only load what each page needs.
+  - Edge caching on Vercel to serve static assets (CSS, images) quickly.
+
+- **Type Safety with TypeScript & Drizzle**
+  - Reduces runtime errors by catching mismatches at compile time.
+
+- **Containerization with Docker**
+  - Ensures consistent performance and behavior across development, staging, and production.
 
 ## 6. Conclusion and Overall Tech Stack Summary
-In building **codeguide-starter**, we chose technologies that:
 
-- Align with modern web standards (Next.js, React, TypeScript).
-- Provide a clear, file-based project structure for rapid onboarding.
-- Offer built-in support for server-side rendering, API routes, and static assets.
-- Emphasize security through password hashing, session management, and safe defaults.
-- Enable easy scaling and future enhancements via modular code and optional integrations.
+This starter template brings together a set of modern, well-integrated tools to help you focus on building your core feature: displaying each user’s usage details in a secure, performant dashboard.
 
-This stack strikes a balance between simplicity for newcomers and flexibility for experienced teams. It accelerates development of a secure authentication flow and a polished dashboard, while leaving room to plug in databases, test suites, and advanced features as the project grows.
+- **Frontend**: Next.js 15, TypeScript, shadcn/ui, Tailwind CSS, React hooks
+- **Backend**: Next.js API routes, Better Auth, PostgreSQL, Drizzle ORM
+- **Infrastructure**: Git/GitHub, Docker, Vercel (with optional GitHub Actions)
+- **Security & Performance**: Server-side rendering, hashed passwords, environment variables, Turbopack, edge caching
+
+Together, these choices give you:
+
+- A **secure** user authentication flow
+- A **type-safe** data layer from database to UI
+- A **modular** code structure that’s easy to extend
+- A **fast** and **responsive** user experience
+- **Automated** deployment and consistent environments
+
+With this foundation in place, you can confidently build out the dynamic data fetching and visualization needed for your usage dashboard, knowing each piece of your tech stack is working in harmony to meet your project goals.
